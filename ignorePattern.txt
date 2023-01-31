@@ -1,0 +1,2 @@
+IGNORE_1:=(^UNITS/MM.*$)
+IGNORE_2:=(^TEXT/OUTFIL.*$)
