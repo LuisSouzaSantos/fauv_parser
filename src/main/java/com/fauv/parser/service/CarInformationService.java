@@ -3,6 +3,8 @@ package com.fauv.parser.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.fauv.parser.entity.Coordinate;
 import com.fauv.parser.entity.CoordinateValue;
 import com.fauv.parser.entity.MeasurementAxisCoordinate;
@@ -16,13 +18,14 @@ import com.fauv.parser.pattern.enums.LinePatternType;
 import com.fauv.parser.reader.DMOInfo;
 import com.fauv.parser.utils.Utils;
 
+@Service
 public class CarInformationService {
 
 	private static final String SEPARATOR_NAME_AND_VALUES = "=";
 	private static final String SEPARATOR_VALUES = ",";
 	private static CarInformationPatternConfiguration pattern = CarInformationPatternConfiguration.getInstance();
 	
-	public static List<PMPOrFM> buildPmpOrFmList(List<DMOInfo> dmoCarInformationList) throws Exception {
+	public List<PMPOrFM> buildPmpOrFmList(List<DMOInfo> dmoCarInformationList) throws Exception {
 		List<PMPOrFM> list = new ArrayList<>();
 		
 		for (DMOInfo dmoCarInformation : dmoCarInformationList) {
@@ -71,7 +74,7 @@ public class CarInformationService {
 		return list;
 	}
 	 
-	public static Coordinate buildCoordinate(String line, LinePattern linePattern) {
+	private Coordinate buildCoordinate(String line, LinePattern linePattern) {
 		Coordinate coordinate = new Coordinate();
 		
 		String[] keyAndValues = line.split(SEPARATOR_NAME_AND_VALUES);
@@ -92,7 +95,7 @@ public class CarInformationService {
 		return coordinate;
 	}
 	
-	public static NominalAxisCoordinate buildNominalAxisCoordinate(String line) throws Exception {
+	private NominalAxisCoordinate buildNominalAxisCoordinate(String line) throws Exception {
 		NominalAxisCoordinate axisCoordinate = new NominalAxisCoordinate();
 		
 		String[] keyAndValues = line.split(SEPARATOR_NAME_AND_VALUES);
@@ -118,7 +121,7 @@ public class CarInformationService {
 		return axisCoordinate;
 	}
 	
-	public static MeasurementAxisCoordinate buildMeasurementAxisCoordinate(String line) throws Exception {
+	private MeasurementAxisCoordinate buildMeasurementAxisCoordinate(String line) throws Exception {
 		if (line == null || line.trim().isEmpty()) { return null; }
 		
 		MeasurementAxisCoordinate axisCoordinate = new MeasurementAxisCoordinate();
