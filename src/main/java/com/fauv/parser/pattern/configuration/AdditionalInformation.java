@@ -16,7 +16,12 @@ public class AdditionalInformation {
 	//
 	// - AXIS COORDINATE
 	//
-	// For axis coordinate you will get values of possibleMeasurementIndex, possibleLowTolaranceIndex and possibleSuperiorTolaranceIndex in sequence.
+	// - Nominal
+	//
+	// For axis coordinate measurement you will get values of possibleMeasurementIndex, possibleLowTolaranceIndex and possibleSuperiorTolaranceIndex in sequence. 
+	//
+	// - Measuremet
+	// For axis coordinate measurement you will get values of possibleMeasurementIndex, possibleLowTolaranceIndex and possibleSuperiorTolaranceIndex in sequence.
 	private List<Integer> values = new ArrayList<Integer>();
 	
 	

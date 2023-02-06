@@ -8,27 +8,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fauv.parser.pattern.configuration.CarInformationPatternConfiguration;
-import com.fauv.parser.pattern.configuration.HeaderPatternConfiguration;
+import com.fauv.parser.pattern.configuration.HeaderPattern;
 import com.fauv.parser.pattern.configuration.IgnorePatternConfiguration;
 import com.fauv.parser.reader.DMO;
 import com.fauv.parser.reader.DMOInfo;
+import com.fauv.parser.utils.Utils;
 
 @Service
 public class DMOService {
 
 	private static Logger logger = LoggerFactory.getLogger(DMOService.class);
 
-	private static HeaderPatternConfiguration headerPatternConfiguration = HeaderPatternConfiguration.getInstance();
-	private static CarInformationPatternConfiguration carInformationPatternConfiguration = CarInformationPatternConfiguration
-			.getInstance();
+	private static HeaderPattern headerPatternConfiguration = HeaderPattern.getInstance();
+	private static CarInformationPatternConfiguration carInformationPatternConfiguration = CarInformationPatternConfiguration.getInstance();
 	private static IgnorePatternConfiguration ignorePatternConfiguration = IgnorePatternConfiguration.getInstance();
 
 	private static final String SEPARATOR = "\r\n";
 
 	public DMO readMultipartFile(MultipartFile file) throws Exception {
-		if (file == null || file.getBytes().length <= 0) {
-			return null;
-		}
+		if (file == null || file.getBytes().length <= 0) { return null; }
 
 		String allContent = new String(file.getBytes(), StandardCharsets.UTF_8);
 
@@ -37,7 +35,7 @@ public class DMOService {
 		return buildDMO(separetedContent);
 	}
 
-	// Responsable to read DMO file and separed in Header and Car Info blocks
+	// Responsable to read DMO file and separated in Header and Car Info blocks
 	private DMO buildDMO(String[] separetedContent) throws Exception {
 		DMO dmo = new DMO();
 		DMOInfo carInformation = null;
@@ -87,18 +85,20 @@ public class DMOService {
 
 			// Capture car info
 			if (isCarInformation) {
+				line = Utils.removeAllSpacesFromString(line);
+				
 				boolean isBeginOfBlock = carInformationPatternConfiguration.isBegin(line);
 
-				if (isBeginOfBlock && carInformation.getDefaultHeaderItems().isEmpty()) {
+				if (isBeginOfBlock && carInformation.getNominalHeaderItem() == null) {
 					logger.debug("Car Default Header info: " + line);
-					carInformation.getDefaultHeaderItems().add(line);
+					carInformation.setNominalHeaderItem(line);					
 					extractDefaultPart = true;
 				} else if (!isBeginOfBlock && extractDefaultPart) {
 					logger.debug("Car Default info: " + line);
-					carInformation.getDefaultItems().add(line);
-				} else if (isBeginOfBlock && carInformation.getMeasurementHeaderItems().isEmpty()) {
+					carInformation.getNominalItems().add(line);
+				} else if (isBeginOfBlock && carInformation.getMeasurementHeaderItem() == null) {
 					logger.debug("Car Measurement Header info: " + line);
-					carInformation.getMeasurementHeaderItems().add(line);
+					carInformation.setMeasurementHeaderItem(line);
 					extractDefaultPart = false;
 					extractMeasuremntPart = true;
 				} else if (!isBeginOfBlock && extractMeasuremntPart) {

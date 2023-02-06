@@ -41,4 +41,8 @@ public class LinePattern {
 		this.additionalInformation = additionalInformation;
 	}
 
+	public boolean hasAdditionalInformation() {
+		return this.additionalInformation != null;
+	}
+	
 }

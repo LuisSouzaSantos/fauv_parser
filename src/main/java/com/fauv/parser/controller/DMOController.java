@@ -1,6 +1,7 @@
 package com.fauv.parser.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +26,12 @@ public class DMOController {
 	private DMOService dmoService;
 	
 	@PostMapping
-	public void uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+	public ResponseEntity<Sample> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
 		DMO dmo = dmoService.readMultipartFile(file);
 		
 		Sample sample = sampleService.buildSample(dmo);
 		
-		System.out.println(sample);
+		return ResponseEntity.ok(sample);
 	}
 	
 }

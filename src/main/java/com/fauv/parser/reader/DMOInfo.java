@@ -5,35 +5,35 @@ import java.util.List;
 
 public class DMOInfo {
 
-	private List<String> defaultHeaderItems = new ArrayList<String>();
-	private List<String> defaultItems = new ArrayList<String>();
-	private List<String> measurementHeaderItems = new ArrayList<String>();
+	private String nominalHeaderItem;
+	private List<String> nominalItems = new ArrayList<String>();
+	private String measurementHeaderItem;
 	private List<String> measurementItems = new ArrayList<String>();
 	
-	public List<String> getDefaultHeaderItems() {
-		return defaultHeaderItems;
+	public String getNominalHeaderItem() {
+		return nominalHeaderItem;
 	}
 	
-	public void setDefaultHeaderItems(List<String> defaultHeaderItems) {
-		this.defaultHeaderItems = defaultHeaderItems;
+	public void setNominalHeaderItem(String nominalHeaderItem) {
+		this.nominalHeaderItem = nominalHeaderItem;
 	}
 	
-	public List<String> getDefaultItems() {
-		return defaultItems;
+	public List<String> getNominalItems() {
+		return nominalItems;
 	}
 	
-	public void setDefaultItems(List<String> defaultItems) {
-		this.defaultItems = defaultItems;
+	public void setNominalItems(List<String> nominalItems) {
+		this.nominalItems = nominalItems;
 	}
 	
-	public List<String> getMeasurementHeaderItems() {
-		return measurementHeaderItems;
+	public String getMeasurementHeaderItem() {
+		return measurementHeaderItem;
 	}
-
-	public void setMeasurementHeaderItems(List<String> measurementHeaderItems) {
-		this.measurementHeaderItems = measurementHeaderItems;
+	
+	public void setMeasurementHeaderItem(String measurementHeaderItem) {
+		this.measurementHeaderItem = measurementHeaderItem;
 	}
-
+	
 	public List<String> getMeasurementItems() {
 		return measurementItems;
 	}

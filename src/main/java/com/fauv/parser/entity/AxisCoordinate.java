@@ -7,7 +7,7 @@ public abstract class AxisCoordinate {
 	private String name;
 	private Double lowerTolerance;
 	private Double superiorTolerance;
-	private AxisType axis;
+	private AxisType axisType;
 	
 	public String getName() {
 		return name;
@@ -33,14 +33,14 @@ public abstract class AxisCoordinate {
 		this.superiorTolerance = superiorTolerance;
 	}
 
-	public AxisType getAxis() {
-		return axis;
+	public AxisType getAxisType() {
+		return axisType;
 	}
 
-	public void setAxis(AxisType axis) {
-		this.axis = axis;
+	public void setAxisType(AxisType axisType) {
+		this.axisType = axisType;
 	}
-	
+
 	public void setTolerance(Double tolerance) {
 		if (this.bothToleranceAreSet() || tolerance == null) { return; }
 		
@@ -60,11 +60,11 @@ public abstract class AxisCoordinate {
 	
 	}
 	
-	private boolean bothToleranceAreNotSet() {
+	public boolean bothToleranceAreNotSet() {
 		return this.getLowerTolerance() == null && this.getSuperiorTolerance() == null;
 	}
 	
-	private boolean bothToleranceAreSet() {
+	public boolean bothToleranceAreSet() {
 		return this.getLowerTolerance() != null && this.getSuperiorTolerance() != null;
 	}
 

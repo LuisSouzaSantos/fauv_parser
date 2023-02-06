@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 //This entity define a Car FM
-public class PMPOrFM {
+public class FM {
 
 	private String name;
 	private List<Coordinate> nominalCoordinates = new ArrayList<Coordinate>();
-	private List<NominalAxisCoordinate> nominalAxisCoodinates = new ArrayList<NominalAxisCoordinate>();
+	private NominalAxisCoordinate nominalAxisCoodinates;
 	private List<Coordinate> measurementCoordinates = new ArrayList<Coordinate>();
-	private List<MeasurementAxisCoordinate> measurementAxisCoordinates = new ArrayList<MeasurementAxisCoordinate>();
+	private MeasurementAxisCoordinate measurementAxisCoordinates;
 	
 	public String getName() {
 		return name;
@@ -28,11 +28,11 @@ public class PMPOrFM {
 		this.nominalCoordinates = nominalCoordinates;
 	}
 	
-	public List<NominalAxisCoordinate> getNominalAxisCoodinates() {
+	public NominalAxisCoordinate getNominalAxisCoodinates() {
 		return nominalAxisCoodinates;
 	}
 	
-	public void setNominalAxisCoodinates(List<NominalAxisCoordinate> nominalAxisCoodinates) {
+	public void setNominalAxisCoodinates(NominalAxisCoordinate nominalAxisCoodinates) {
 		this.nominalAxisCoodinates = nominalAxisCoodinates;
 	}
 	
@@ -44,12 +44,14 @@ public class PMPOrFM {
 		this.measurementCoordinates = measurementCoordinates;
 	}
 	
-	public List<MeasurementAxisCoordinate> getMeasurementAxisCoordinates() {
+	public MeasurementAxisCoordinate getMeasurementAxisCoordinates() {
 		return measurementAxisCoordinates;
 	}
 	
-	public void setMeasurementAxisCoordinates(List<MeasurementAxisCoordinate> measurementAxisCoordinates) {
+	public void setMeasurementAxisCoordinates(MeasurementAxisCoordinate measurementAxisCoordinates) {
 		this.measurementAxisCoordinates = measurementAxisCoordinates;
 	}
+	
+	
 	
 }

@@ -27,4 +27,8 @@ public class Utils {
 		return StringUtils.getStringBetweenTwoCharacters(value, "(", ")");
 	}
 	
+	public static String removeAllSpacesFromString(String value) {
+		return value.replaceAll("\\s+","");
+	}
+	
 }

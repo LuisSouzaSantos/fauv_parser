@@ -4,26 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.fauv.parser.entity.enums.HeaderType;
 import com.fauv.parser.pattern.enums.BlockPatternType;
 
-public class HeaderPatternConfiguration {
+public class HeaderPattern {
 
 	private static String HEADER_PART_TO_BE_REMOVED = BlockPatternType.HEADER.name()+"_";
 	
 	private List<BlockPattern> regexBlocks = new ArrayList<BlockPattern>();
 	private Map<HeaderType, List<LinePattern>> regexLines = new HashMap<HeaderType, List<LinePattern>>();
-	private static HeaderPatternConfiguration configuration;
+	private static HeaderPattern configuration;
 	
-	public static HeaderPatternConfiguration getInstance() {
-		if (configuration == null) { configuration = new HeaderPatternConfiguration(); }
+	public static HeaderPattern getInstance() {
+		if (configuration == null) { configuration = new HeaderPattern(); }
 		
 		return configuration;
 	}
 	
-	private HeaderPatternConfiguration() {
+	private HeaderPattern() {
 		loadLineRegexs();
 		loadHeaderBlockRegexs();
 	}
@@ -34,34 +35,28 @@ public class HeaderPatternConfiguration {
 		return regexLines;
 	}
 	
-	public List<BlockPattern> getRegexBlocks() {
-		if (regexBlocks == null || regexBlocks.isEmpty()) { loadHeaderBlockRegexs(); }
-		
-		return regexBlocks;
-	}
-	
-	public boolean isBegin(String content) {
-		boolean isBegin = false;
-		
-		for (BlockPattern headerBlock : regexBlocks) {
-			isBegin = content.matches(headerBlock.getInit());
-			 
-			if (isBegin) { break; }
-		}
-				
-		return isBegin;
+	public boolean isBegin(String content) {	
+		return getRegexBlocks().stream().anyMatch(headerRegexBlock -> content.matches(headerRegexBlock.getInit()));
 	}
 	
 	public boolean isEnd(String content) {
-		boolean isEnd = false;
-		
-		for (BlockPattern headerBlock : regexBlocks) {
-			isEnd = content.matches(headerBlock.getEnd());
-			 
-			if (isEnd) { break; }
+		return getRegexBlocks().stream().anyMatch(headerRegexBlock -> content.matches(headerRegexBlock.getEnd()));
+	}
+	
+	public HeaderType getHeaderTypeByValue(String value) throws Exception {
+		for (Entry<HeaderType, List<LinePattern>> entry : getRegexLines().entrySet()) {
+			if (!entry.getValue().stream().anyMatch(linePattern -> value.matches(linePattern.getPattern()))) { continue; }
+			
+			return entry.getKey();
 		}
-				
-		return isEnd;
+		
+		return null;
+	}
+	
+	private List<BlockPattern> getRegexBlocks() {
+		if (regexBlocks == null || regexBlocks.isEmpty()) { loadHeaderBlockRegexs(); }
+		
+		return regexBlocks;
 	}
 	
 	private void loadLineRegexs() {
