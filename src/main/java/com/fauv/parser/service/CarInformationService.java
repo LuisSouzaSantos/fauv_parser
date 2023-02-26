@@ -108,7 +108,7 @@ public class CarInformationService {
 	private Coordinate buildCoordinate(String line, LinePattern linePattern) {
 		if (line == null || line.trim().isEmpty()) { return null; }
 		
-		logger.debug("Building Coordinate using line: "+line);
+		logger.info("Building Coordinate using line: "+line);
 		
 		Coordinate coordinate = new Coordinate();
 		
@@ -132,9 +132,7 @@ public class CarInformationService {
 	
 	private NominalAxisCoordinate buildNominalAxisCoordinate(String line) throws Exception {
 		if (line == null || line.trim().isEmpty()) { return null; }
-		
-		logger.debug("Building Nominal Axis Coordinate using line: "+line);
-		
+				
 		NominalAxisCoordinate axisCoordinate = new NominalAxisCoordinate();
 		
 		String[] keyAndValues = line.split(SEPARATOR_NAME_AND_VALUES);
@@ -143,6 +141,11 @@ public class CarInformationService {
 		axisCoordinate.setName(Utils.extractName(keyAndValues[0]));
 		
 		LinePattern linePattern = pattern.whichLinePatternIs(line);
+		
+		if (linePattern == null) { 
+			logger.info("Nominal Line Pattern not found for: "+ line);
+			return axisCoordinate; 
+		}
 		
 		if (linePattern.hasAdditionalInformation()) {
 			for (int i = 0; i < linePattern.getAdditionalInformation().getValues().size(); i++) {
@@ -174,7 +177,7 @@ public class CarInformationService {
 	private MeasurementAxisCoordinate buildMeasurementAxisCoordinate(String line) throws Exception {
 		if (line == null || line.trim().isEmpty()) { return null; }
 		
-		logger.info("Building Nominal Axis Coordinate using line: "+line);
+		logger.info(line);
 		
 		MeasurementAxisCoordinate axisCoordinate = new MeasurementAxisCoordinate();
 		
@@ -184,6 +187,11 @@ public class CarInformationService {
 		axisCoordinate.setName(Utils.extractName(keyAndValues[0]));
 		
 		LinePattern linePattern = pattern.whichLinePatternIs(line);
+		
+		if (linePattern == null) { 
+			logger.info("Measurement Line Pattern not found for: "+ line);
+			return axisCoordinate; 
+		}
 				
 		for (String value : values) {
 			LinePattern valueLinePattern = pattern.whitchLinePatternIsUsingMeasurementAxisCoordinate(value);
