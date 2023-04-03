@@ -3,10 +3,13 @@ package com.fauv.parser.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fauv.parser.entity.enums.AxisType;
+
 //This entity define a Car PMP
 public class PMP {
 
 	private String name;
+	private AxisType workingOn;
 	private Coordinate nominalCoordinate;
 	private List<NominalAxisCoordinate> nominalAxisCoordinates = new ArrayList<>();
 	private Coordinate measurementCoordinate;
@@ -20,6 +23,14 @@ public class PMP {
 		this.name = name;
 	}
 	
+	public AxisType getWorkingOn() {
+		return workingOn;
+	}
+
+	public void setWorkingOn(AxisType workingOn) {
+		this.workingOn = workingOn;
+	}
+
 	public Coordinate getNominalCoordinate() {
 		return nominalCoordinate;
 	}

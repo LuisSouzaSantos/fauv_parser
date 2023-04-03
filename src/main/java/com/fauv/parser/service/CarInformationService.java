@@ -2,8 +2,6 @@ package com.fauv.parser.service;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fauv.parser.entity.Coordinate;
@@ -22,7 +20,7 @@ import com.fauv.parser.utils.Utils;
 
 @Service
 public class CarInformationService {
-	private static Logger logger = LoggerFactory.getLogger(CarInformationService.class);
+	//private static Logger logger = LoggerFactory.getLogger(CarInformationService.class);
 	
 	private static final String SEPARATOR_NAME_AND_VALUES = "=";
 	private static final String SEPARATOR_VALUES = ",";
@@ -37,6 +35,7 @@ public class CarInformationService {
 		fm.setName(extractFMName(dmoCarInformation.getNominalHeaderItem()));
 		fm.setNominalAxisCoodinates(buildNominalAxisCoordinate(nominalAxisCoordinate));
 		fm.setMeasurementAxisCoordinates(buildMeasurementAxisCoordinate(measurementAxisCoordinate));
+
 		
 		for (String item : dmoCarInformation.getNominalItems()) {
 			LinePattern linePattern = pattern.whichLinePatternIs(item);
@@ -102,20 +101,19 @@ public class CarInformationService {
 			
 		}
 		
+		pmp.setWorkingOn(pmp.getNominalCoordinate().getWorkingOnAxis());
 		return pmp;
 	}
 	 
 	private Coordinate buildCoordinate(String line, LinePattern linePattern) {
 		if (line == null || line.trim().isEmpty()) { return null; }
-		
-		logger.info("Building Coordinate using line: "+line);
-		
+				
 		Coordinate coordinate = new Coordinate();
 		
 		String[] keyAndValues = line.split(SEPARATOR_NAME_AND_VALUES);
 		String[] values = keyAndValues[1].split(SEPARATOR_VALUES);
 		
-		coordinate.setName(line);
+		coordinate.setName(Utils.extractName(keyAndValues[0]));
 		
 		List<Integer> additionalInformationIndexs = linePattern.getAdditionalInformation().getValues();
 		
@@ -142,9 +140,10 @@ public class CarInformationService {
 		
 		LinePattern linePattern = pattern.whichLinePatternIs(line);
 		
-		if (linePattern == null) { 
-			logger.info("Nominal Line Pattern not found for: "+ line);
-			return axisCoordinate; 
+		AxisType axisType = AxisType.getAxisTypeByLinePatternName(linePattern.getName());
+		
+		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) {
+			axisCoordinate.setAxisType(axisType);
 		}
 		
 		if (linePattern.hasAdditionalInformation()) {
@@ -160,7 +159,7 @@ public class CarInformationService {
 			LinePattern valueLinePattern = pattern.whichLinePatternIsUsingNominalAxisCoordinate(value);
 			
 			if (valueLinePattern == null) { continue; }
-						
+			
 			if (!axisCoordinate.bothToleranceAreSet() && valueLinePattern.getType().equals(LinePatternType.AXIS_COORDINATE_TOLERANCE_NOMINAL)) {
 				axisCoordinate.setTolerance(Double.parseDouble(value));
 			}
@@ -176,9 +175,7 @@ public class CarInformationService {
 	
 	private MeasurementAxisCoordinate buildMeasurementAxisCoordinate(String line) throws Exception {
 		if (line == null || line.trim().isEmpty()) { return null; }
-		
-		logger.info(line);
-		
+				
 		MeasurementAxisCoordinate axisCoordinate = new MeasurementAxisCoordinate();
 		
 		String[] keyAndValues = line.split(SEPARATOR_NAME_AND_VALUES);
@@ -188,9 +185,12 @@ public class CarInformationService {
 		
 		LinePattern linePattern = pattern.whichLinePatternIs(line);
 		
-		if (linePattern == null) { 
-			logger.info("Measurement Line Pattern not found for: "+ line);
-			return axisCoordinate; 
+		if (linePattern == null) { return axisCoordinate; }
+		
+		AxisType axisType = AxisType.getAxisTypeByLinePatternName(linePattern.getName());
+		
+		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) {
+			axisCoordinate.setAxisType(axisType);
 		}
 				
 		for (String value : values) {
@@ -205,6 +205,10 @@ public class CarInformationService {
 			if (valueLinePattern.getType().equals(LinePatternType.AXIS_COORDINATE_TOLERANCE_RESULT_MEASUREMENT)) {
 				axisCoordinate.setType(TolaranceType.valueOf(value));
 			}
+		}
+		
+		if (linePattern.getAdditionalInformation() == null) {
+			System.out.println("STOP");
 		}
 		
 		for (int i = 0; i < linePattern.getAdditionalInformation().getValues().size(); i++) {

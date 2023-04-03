@@ -155,7 +155,7 @@ public class Header {
 	}
 	
 	private static String sanitazerFileName(String extractedContent) {
-		return extractedContent.replaceAll("'", "");
+		return extractedContent.replaceAll("'", "").trim();
 	}
 	
 	private static LocalDate sanitazerDate(String extractedContent) {
@@ -179,19 +179,19 @@ public class Header {
 	}
 	
 	private static String sanitazerPartNumber(String extractedContent) {
-		return extractedContent.replaceAll("'", "");
+		return extractedContent.replaceAll("'", "").trim();
 	}
 	
 	private static String sanitazerEquipmentName(String extractedContent) {
-		return extractedContent.replaceAll("'", "");
+		return extractedContent.replaceAll("'", "").trim();
 	}
 	
 	private static String sanitazerSampleId(String extractedContent) {
-		return extractedContent.replaceAll("'", "");
+		return extractedContent.replaceAll("'", "").trim();
 	}
 	
 	private static String sanitazerInspectorName(String extractedContent) {
-		return extractedContent.replaceAll("'", "");
+		return extractedContent.replaceAll("'", "").trim();
 	}
 	
 }
