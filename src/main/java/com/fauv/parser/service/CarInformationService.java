@@ -20,7 +20,6 @@ import com.fauv.parser.utils.Utils;
 
 @Service
 public class CarInformationService {
-	//private static Logger logger = LoggerFactory.getLogger(CarInformationService.class);
 	
 	private static final String SEPARATOR_NAME_AND_VALUES = "=";
 	private static final String SEPARATOR_VALUES = ",";
@@ -32,10 +31,9 @@ public class CarInformationService {
 		String nominalAxisCoordinate = dmoCarInformation.getNominalItems().get(dmoCarInformation.getNominalItems().size()-1);
 		String measurementAxisCoordinate = dmoCarInformation.getMeasurementItems().get(dmoCarInformation.getMeasurementItems().size()-1);
 		
-		fm.setName(extractFMName(dmoCarInformation.getNominalHeaderItem()));
-		fm.setNominalAxisCoodinates(buildNominalAxisCoordinate(nominalAxisCoordinate));
+		fm.setName(extractFMName(dmoCarInformation.getNominalHeaderItem()));		
+		fm.setNominalAxisCoodinates(buildNominalAxisCoordinate(nominalAxisCoordinate, true));
 		fm.setMeasurementAxisCoordinates(buildMeasurementAxisCoordinate(measurementAxisCoordinate));
-
 		
 		for (String item : dmoCarInformation.getNominalItems()) {
 			LinePattern linePattern = pattern.whichLinePatternIs(item);
@@ -81,7 +79,7 @@ public class CarInformationService {
 			if (usedLinePattern == null) { continue; }
 			
 			if (usedLinePattern.getType().isAnyAxisCoordinateNominal()) {
-				NominalAxisCoordinate axisCoordinate = buildNominalAxisCoordinate(nominalItem);
+				NominalAxisCoordinate axisCoordinate = buildNominalAxisCoordinate(nominalItem, false);
 				
 				pmp.getNominalAxisCoordinates().add(axisCoordinate);
 			}
@@ -128,7 +126,7 @@ public class CarInformationService {
 		return coordinate;
 	}
 	
-	private NominalAxisCoordinate buildNominalAxisCoordinate(String line) throws Exception {
+	private NominalAxisCoordinate buildNominalAxisCoordinate(String line, boolean isFm) throws Exception {
 		if (line == null || line.trim().isEmpty()) { return null; }
 				
 		NominalAxisCoordinate axisCoordinate = new NominalAxisCoordinate();
@@ -142,16 +140,16 @@ public class CarInformationService {
 		
 		AxisType axisType = AxisType.getAxisTypeByLinePatternName(linePattern.getName());
 		
-		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) {
-			axisCoordinate.setAxisType(axisType);
-		}
+		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) { axisCoordinate.setAxisType(axisType); }
 		
 		if (linePattern.hasAdditionalInformation()) {
 			for (int i = 0; i < linePattern.getAdditionalInformation().getValues().size(); i++) {
 				Integer index = linePattern.getAdditionalInformation().getValues().get(i);
 				
-				if (i == 1 && index != -1) { axisCoordinate.setLowerTolerance((Double.parseDouble(values[index])));}
-				if (i == 2 && index != -1) { axisCoordinate.setSuperiorTolerance((Double.parseDouble(values[index])));}
+				if (i == 0 && isFm && index != -1) { axisCoordinate.setDefaultValue((Double.parseDouble(values[index]))); }
+				else if (i == 1 && index != -1) { axisCoordinate.setLowerTolerance((Double.parseDouble(values[index])));}
+				else if (i == 2 && index != -1) { axisCoordinate.setSuperiorTolerance((Double.parseDouble(values[index])));}
+				else {}
 			}
 		}
 	
@@ -189,9 +187,7 @@ public class CarInformationService {
 		
 		AxisType axisType = AxisType.getAxisTypeByLinePatternName(linePattern.getName());
 		
-		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) {
-			axisCoordinate.setAxisType(axisType);
-		}
+		if (axisType.equals(AxisType.D) || axisType.equals(AxisType.T)) { axisCoordinate.setAxisType(axisType); }
 				
 		for (String value : values) {
 			LinePattern valueLinePattern = pattern.whitchLinePatternIsUsingMeasurementAxisCoordinate(value);
@@ -207,16 +203,13 @@ public class CarInformationService {
 			}
 		}
 		
-		if (linePattern.getAdditionalInformation() == null) {
-			System.out.println("STOP");
-		}
-		
 		for (int i = 0; i < linePattern.getAdditionalInformation().getValues().size(); i++) {
 			Integer index = linePattern.getAdditionalInformation().getValues().get(i);
 			
 			if (i == 0 && index != -1) { axisCoordinate.setCalculated((Double.parseDouble(values[index]))); ; }
-			if (i == 1 && index != -1) { axisCoordinate.setLowerTolerance((Double.parseDouble(values[index])));}
-			if (i == 2 && index != -1) { axisCoordinate.setSuperiorTolerance((Double.parseDouble(values[index])));}
+			else if (i == 1 && index != -1) { axisCoordinate.setLowerTolerance((Double.parseDouble(values[index])));}
+			else if (i == 2 && index != -1) { axisCoordinate.setSuperiorTolerance((Double.parseDouble(values[index])));}
+			else {}
 		}
 		
 		return axisCoordinate;

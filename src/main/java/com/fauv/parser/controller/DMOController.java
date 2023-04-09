@@ -30,6 +30,7 @@ public class DMOController {
 		DMO dmo = dmoService.readMultipartFile(file);
 		
 		Sample sample = sampleService.buildSample(dmo);
+		sample.getHeader().setFileName(file.getOriginalFilename());
 		
 		return ResponseEntity.ok(sample);
 	}
