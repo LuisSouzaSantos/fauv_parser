@@ -19,10 +19,10 @@ public class PatternConfiguration {
 	
     private final Logger logger = LoggerFactory.getLogger(PatternConfiguration.class);
 
-	private static final String BLOCK_PATTERN_CONFIGURATION_FILE_PATH = "./blockPattern.txt";
-	private static final String INVALID_PATTERN_CONFIGURATION_FILE_PATH = "./ignorePattern.txt";
-	private static final String LINE_PATTERN_CONFIGURATION_FILE_PATH = "./linePattern.txt"; 
-	private static final String	LINE_INFORMATION_PATTERN_CONFIGURATION_FILE_PATH = "./contentPattern.txt"; 
+	private static final String BLOCK_PATTERN_CONFIGURATION_FILE_PATH = "/usr/local/fauv/parserRegex/blockPattern.txt";
+	private static final String INVALID_PATTERN_CONFIGURATION_FILE_PATH = "/usr/local/fauv/parserRegex/ignorePattern.txt";
+	private static final String LINE_PATTERN_CONFIGURATION_FILE_PATH = "/usr/local/fauv/parserRegex/linePattern.txt"; 
+	private static final String	LINE_INFORMATION_PATTERN_CONFIGURATION_FILE_PATH = "/usr/local/fauv/parserRegex/contentPattern.txt"; 
 	
 	private List<BlockPattern> blockList = new ArrayList<BlockPattern>();
 	private List<AdditionalInformation> additionalInformationList = new ArrayList<AdditionalInformation>();
