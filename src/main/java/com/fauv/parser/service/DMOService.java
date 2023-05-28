@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fauv.parser.exception.DMOException;
 import com.fauv.parser.pattern.configuration.CarInformationPatternConfiguration;
 import com.fauv.parser.pattern.configuration.HeaderPattern;
 import com.fauv.parser.pattern.configuration.IgnorePatternConfiguration;
@@ -26,11 +27,13 @@ public class DMOService {
 	private static final String SEPARATOR = "\r\n";
 
 	public DMO readMultipartFile(MultipartFile file) throws Exception {
-		if (file == null || file.getBytes().length <= 0) { return null; }
+		if (file == null || file.getBytes().length <= 0) { throw new DMOException("FILE_HAS_NO_DATA"); }
 
 		String allContent = new String(file.getBytes(), StandardCharsets.UTF_8);
 
 		String[] separetedContent = allContent.split(SEPARATOR);
+		
+		if (!headerPatternConfiguration.isBegin(separetedContent[0])) { throw new DMOException("FILE_IS_NOT_A_DMO"); }
 
 		return buildDMO(separetedContent);
 	}
@@ -46,7 +49,8 @@ public class DMOService {
 		boolean extractMeasuremntPart = false;
 
 		for (String line : separetedContent) {
-			logger.debug("Reading Line: " + line);
+			
+			
 
 			// Ignore line if needed
 			if (ignorePatternConfiguration.ignoreThisLine(line)) {
